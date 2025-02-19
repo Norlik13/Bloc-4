@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Button?>
+
+<GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.bloc4.controller.AddSalarieController">
+    <Label text="Nom:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+    <TextField fx:id="nomField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+    <Label text="Prénom:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+    <TextField fx:id="prenomField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+    <Label text="Téléphone Fixe:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+    <TextField fx:id="telephoneFixeField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+    <Label text="Téléphone Portable:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+    <TextField fx:id="telephonePortableField" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+    <Label text="Email:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+    <TextField fx:id="emailField" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+    <Label text="Service:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+    <ComboBox fx:id="serviceComboBox" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+    <Label text="Site:" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+    <ComboBox fx:id="siteComboBox" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+    <Button text="Save" onAction="#handleSave" GridPane.rowIndex="7" GridPane.columnIndex="0" GridPane.columnSpan="2"/>
+</GridPane>

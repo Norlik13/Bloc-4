@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ComboBox?>
+
+<HBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.bloc4.controller.SalarieController" onKeyPressed="#handleKeyPress">
+    <VBox style="-fx-padding: 10" spacing="10">
+        <TableView fx:id="salarieTable" minWidth="700" maxWidth="1500">
+            <columns>
+                <TableColumn fx:id="nomColumn" text="Nom"/>
+                <TableColumn fx:id="prenomColumn" text="Prénom"/>
+                <TableColumn fx:id="telephoneFixeColumn" text="Téléphone Fixe"/>
+                <TableColumn fx:id="telephonePortableColumn" text="Téléphone Portable"/>
+                <TableColumn fx:id="emailColumn" text="Email"/>
+                <TableColumn fx:id="departmentColumn" text="Service"/>
+                <TableColumn fx:id="siteColumn" text="Site"/>
+            </columns>
+        </TableView>
+        <Button fx:id="ajouterButton" text="Ajouter" onAction="#handleAddSalarie" visible="false"/>
+        <Button fx:id="modifierButton" text="Modifier" onAction="#handleUpdateSalarie" visible="false"/>
+        <Button fx:id="supprimerButton" text="Supprimer" onAction="#handleDeleteSalarie" visible="false"/>
+    </VBox>
+    <VBox style="-fx-padding: 10" spacing="10">
+        <TextField fx:id="nameFilterField" promptText="Entrez un nom"/>
+        <TextField fx:id="prenomFilterField" promptText="Entrez un prénom"/>
+        <ComboBox fx:id="siteFilterComboBox" promptText="Selectionnez un site"/>
+        <ComboBox fx:id="departmentFilterComboBox" promptText="Selectionnez un departement"/>
+        <HBox spacing="10">
+            <Button text="Search" onAction="#handleSearch"/>
+            <Button text="Reset Filter" onAction="#handleResetFilter"/>
+        </HBox>
+    </VBox>
+</HBox>
