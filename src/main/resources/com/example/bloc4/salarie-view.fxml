@@ -9,8 +9,8 @@
 <?import javafx.scene.control.ComboBox?>
 
 <HBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.bloc4.controller.SalarieController" onKeyPressed="#handleKeyPress">
-    <VBox style="-fx-padding: 10" spacing="10">
-        <TableView fx:id="salarieTable" minWidth="700" maxWidth="1500">
+    <VBox style="-fx-padding: 10" spacing="10" HBox.hgrow="ALWAYS">
+        <TableView fx:id="salarieTable" VBox.vgrow="ALWAYS">
             <columns>
                 <TableColumn fx:id="nomColumn" text="Nom"/>
                 <TableColumn fx:id="prenomColumn" text="Prénom"/>

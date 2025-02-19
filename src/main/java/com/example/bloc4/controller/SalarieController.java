@@ -65,11 +65,14 @@ public class SalarieController {
 	private SalarieService salarieService = new SalarieService();
 	private FilteredList<Salarie> filteredData;
 	User currentUser = new User(User.Role.INVITED);
+	private String adminPassword = "admin";
 
 	private final KeyCombination ctrlACombination = new KeyCodeCombination(KeyCode.A, KeyCombination.CONTROL_DOWN);
 
 	@FXML
 	private void initialize() {
+		salarieTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
 		nomColumn.setCellValueFactory(new PropertyValueFactory<>("nom"));
 		prenomColumn.setCellValueFactory(new PropertyValueFactory<>("prenom"));
 		telephoneFixeColumn.setCellValueFactory(new PropertyValueFactory<>("telephoneFixe"));
@@ -161,7 +164,7 @@ public class SalarieController {
 		});
 
 		dialog.showAndWait().ifPresent(password -> {
-			if (password.equals("admin")) {
+			if (password.equals(adminPassword)) {
 				currentUser.setRole(User.Role.ADMIN);
 				updateButtonVisibility();
 			} else {
