@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class SalarieService {
+	private static final String API_KEY = "my-secure-api-key";
 
 	public List<Salarie> fetchSalariesFromAPI() throws IOException {
 		return fetchFromAPI("http://localhost:8080/api/salaries", new TypeToken<List<Salarie>>() {});
@@ -31,6 +32,7 @@ public class SalarieService {
 		URL url = new URL(urlString);
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 		connection.setRequestMethod("DELETE");
+		connection.setRequestProperty("API-Key", API_KEY);
 
 		int responseCode = connection.getResponseCode();
 		if (responseCode != HttpURLConnection.HTTP_OK) {
@@ -42,6 +44,7 @@ public class SalarieService {
 		URL url = new URL(urlString);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestMethod("GET");
+		conn.setRequestProperty("API-Key", API_KEY);
 		conn.connect();
 
 		int responseCode = conn.getResponseCode();
@@ -49,7 +52,7 @@ public class SalarieService {
 			throw new IOException("Failed to fetch data: HTTP response code " + responseCode);
 		}
 
-		Scanner scanner = new Scanner(url.openStream());
+		Scanner scanner = new Scanner(conn.getInputStream());
 		StringBuilder json = new StringBuilder();
 		while (scanner.hasNext()) {
 			json.append(scanner.nextLine());
@@ -64,6 +67,7 @@ public class SalarieService {
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestMethod(method);
 		conn.setRequestProperty("Content-Type", "application/json; utf-8");
+		conn.setRequestProperty("API-Key", API_KEY);
 		conn.setDoOutput(true);
 
 		String jsonInputString = new Gson().toJson(salarie);

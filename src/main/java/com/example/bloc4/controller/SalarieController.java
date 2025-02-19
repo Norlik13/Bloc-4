@@ -62,10 +62,10 @@ public class SalarieController {
 	@FXML
 	private Button supprimerButton;
 
-	private SalarieService salarieService = new SalarieService();
+	private final SalarieService salarieService = new SalarieService();
 	private FilteredList<Salarie> filteredData;
 	User currentUser = new User(User.Role.INVITED);
-	private String adminPassword = "admin";
+	private final String adminPassword = "admin";
 
 	private final KeyCombination ctrlACombination = new KeyCodeCombination(KeyCode.A, KeyCombination.CONTROL_DOWN);
 
@@ -151,13 +151,13 @@ public class SalarieController {
 		grid.add(passwordField, 1, 0);
 		GridPane.setHgrow(passwordField, Priority.ALWAYS);
 
-		Node loginButton = dialog.getDialogPane().lookupButton(dialog.getDialogPane().getButtonTypes().get(0));
+		Node loginButton = dialog.getDialogPane().lookupButton(dialog.getDialogPane().getButtonTypes().getFirst());
 		loginButton.disableProperty().bind(passwordField.textProperty().isEmpty());
 
 		dialog.getDialogPane().setContent(grid);
 
 		dialog.setResultConverter(dialogButton -> {
-			if (dialogButton == dialog.getDialogPane().getButtonTypes().get(0)) {
+			if (dialogButton == dialog.getDialogPane().getButtonTypes().getFirst()) {
 				return passwordField.getText();
 			}
 			return null;

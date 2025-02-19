@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class DepartmentService {
+	private static final String API_KEY = "my-secure-api-key";
 
 	public List<Department> fetchDepartmentsFromAPI() throws IOException {
 		return fetchFromAPI("http://localhost:8080/api/departments", new TypeToken<List<Department>>() {});
@@ -30,6 +31,7 @@ public class DepartmentService {
 		URL url = new URL("http://localhost:8080/api/departments/" + departmentId);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestMethod("DELETE");
+		conn.setRequestProperty("API-Key", API_KEY);
 
 		int responseCode = conn.getResponseCode();
 		if (responseCode != HttpURLConnection.HTTP_NO_CONTENT) {
@@ -41,6 +43,7 @@ public class DepartmentService {
 		URL url = new URL(urlString);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestMethod("GET");
+		conn.setRequestProperty("API-Key", API_KEY);
 		conn.connect();
 
 		int responseCode = conn.getResponseCode();
@@ -48,7 +51,7 @@ public class DepartmentService {
 			throw new IOException("Failed to fetch data: HTTP response code " + responseCode);
 		}
 
-		Scanner scanner = new Scanner(url.openStream());
+		Scanner scanner = new Scanner(conn.getInputStream());
 		StringBuilder json = new StringBuilder();
 		while (scanner.hasNext()) {
 			json.append(scanner.nextLine());
@@ -63,6 +66,7 @@ public class DepartmentService {
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestMethod(method);
 		conn.setRequestProperty("Content-Type", "application/json; utf-8");
+		conn.setRequestProperty("API-Key", API_KEY);
 		conn.setDoOutput(true);
 
 		String jsonInputString = new Gson().toJson(department);
