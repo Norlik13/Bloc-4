@@ -98,13 +98,6 @@ public class SalarieController {
 	}
 
 	@FXML
-	private void handleKeyPress(KeyEvent event) {
-		if (ctrlACombination.match(event)) {
-			showAdminLoginDialog();
-		}
-	}
-
-	@FXML
 	private void handleSearch() {
 		String nameFilter = nameFilterField.getText().toLowerCase();
 		String prenomFilter = prenomFilterField.getText().toLowerCase();
@@ -136,6 +129,18 @@ public class SalarieController {
 		departmentFilterComboBox.setValue(null);
 		departmentFilterComboBox.setPromptText("Selectionnez un departement");
 		filteredData.setPredicate(salarie -> true);
+	}
+
+	@FXML
+	public void handleKeyPress(KeyEvent event) {
+		if (ctrlACombination.match(event)) {
+			if (currentUser.getRole() == User.Role.ADMIN) {
+				currentUser.setRole(User.Role.INVITED);
+			} else {
+				showAdminLoginDialog();
+			}
+			updateButtonVisibility();
+		}
 	}
 
 	private void showAdminLoginDialog() {

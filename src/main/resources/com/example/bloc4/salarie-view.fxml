@@ -8,7 +8,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ComboBox?>
 
-<HBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.bloc4.controller.SalarieController" onKeyPressed="#handleKeyPress">
+<HBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.bloc4.controller.SalarieController" fx:id="root">
     <VBox style="-fx-padding: 10" spacing="10" HBox.hgrow="ALWAYS">
         <TableView fx:id="salarieTable" VBox.vgrow="ALWAYS">
             <columns>
