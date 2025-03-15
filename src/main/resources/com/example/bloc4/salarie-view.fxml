@@ -21,9 +21,21 @@
                 <TableColumn fx:id="siteColumn" text="Site"/>
             </columns>
         </TableView>
-        <Button fx:id="ajouterButton" text="Ajouter" onAction="#handleAddSalarie" visible="false"/>
-        <Button fx:id="modifierButton" text="Modifier" onAction="#handleUpdateSalarie" visible="false"/>
-        <Button fx:id="supprimerButton" text="Supprimer" onAction="#handleDeleteSalarie" visible="false"/>
+        <HBox spacing="10">
+            <VBox spacing="10">
+                <Button fx:id="ajouterSalarieButton" text="Ajouter un salarie" onAction="#handleAddSalarie" visible="false"/>
+                <Button fx:id="modifierSalarieButton" text="Modifier un salarie" onAction="#handleUpdateSalarie" visible="false"/>
+                <Button fx:id="supprimerSalarieButton" text="Supprimer un salarie" onAction="#handleDeleteSalarie" visible="false"/>
+            </VBox>
+            <VBox spacing="10">
+                <Button fx:id="addDepartmentButton" text="Ajouter un departement" onAction="#handleAddDepartment" visible="false"/>
+                <Button fx:id="deleteDepartmentButton" text="Supprimer un departement" onAction="#handleDeleteDepartment" visible="false"/>
+            </VBox>
+            <VBox spacing="10">
+                <Button fx:id="addSiteButton" text="Ajouter un site" onAction="#handleAddSite" visible="false"/>
+                <Button fx:id="deleteSiteButton" text="Supprimer un site" onAction="#handleDeleteSite" visible="false"/>
+            </VBox>
+        </HBox>
     </VBox>
     <VBox style="-fx-padding: 10" spacing="10">
         <TextField fx:id="nameFilterField" promptText="Entrez un nom"/>

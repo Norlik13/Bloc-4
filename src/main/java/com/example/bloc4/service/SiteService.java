@@ -1,11 +1,17 @@
 package com.example.bloc4.service;
 
 import com.example.bloc4.model.Site;
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -23,10 +29,6 @@ public class SiteService {
 		sendToAPI("http://localhost:8080/api/sites", "POST", site);
 	}
 
-	public void updateSiteInAPI(Site site) throws IOException {
-		sendToAPI("http://localhost:8080/api/sites/" + site.getId(), "PUT", site);
-	}
-
 	public void deleteSiteFromAPI(int siteId) throws IOException {
 		URL url = new URL("http://localhost:8080/api/sites/" + siteId);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -34,7 +36,7 @@ public class SiteService {
 		conn.setRequestProperty("API-Key", API_KEY);
 
 		int responseCode = conn.getResponseCode();
-		if (responseCode != HttpURLConnection.HTTP_NO_CONTENT) {
+		if (responseCode != HttpURLConnection.HTTP_NO_CONTENT && responseCode != HttpURLConnection.HTTP_OK) {
 			throw new IOException("Failed to delete site: HTTP response code " + responseCode);
 		}
 	}
@@ -69,7 +71,18 @@ public class SiteService {
 		conn.setRequestProperty("API-Key", API_KEY);
 		conn.setDoOutput(true);
 
-		String jsonInputString = new Gson().toJson(site);
+		Gson gson = new GsonBuilder()
+				.registerTypeAdapter(Site.class, new JsonSerializer<Site>() {
+					@Override
+					public JsonElement serialize(Site src, Type typeOfSrc, JsonSerializationContext context) {
+						JsonObject jsonObject = new JsonObject();
+						jsonObject.addProperty("name", src.getName());
+						return jsonObject;
+					}
+				})
+				.create();
+
+		String jsonInputString = gson.toJson(site);
 		try (OutputStream os = conn.getOutputStream()) {
 			byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
 			os.write(input, 0, input.length);

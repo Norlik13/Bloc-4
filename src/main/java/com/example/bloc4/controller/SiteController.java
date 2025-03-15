@@ -44,23 +44,6 @@ public class SiteController {
 	}
 
 	@FXML
-	private void handleUpdateSite() {
-		Site selectedSite = siteTable.getSelectionModel().getSelectedItem();
-		if (selectedSite != null) {
-			selectedSite.setName(villeField.getText());
-			try {
-				siteService.updateSiteInAPI(selectedSite);
-				siteTable.refresh();
-			} catch (IOException e) {
-				e.printStackTrace();
-				showAlert("Error", "Failed to update site");
-			}
-		} else {
-			showAlert("No Selection", "No site selected for update");
-		}
-	}
-
-	@FXML
 	private void handleDeleteSite() {
 		Site selectedSite = siteTable.getSelectionModel().getSelectedItem();
 		if (selectedSite != null) {

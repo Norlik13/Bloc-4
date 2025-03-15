@@ -1,11 +1,13 @@
 package com.example.bloc4.service;
 
 import com.example.bloc4.model.Department;
-import com.google.gson.Gson;
+import com.example.bloc4.model.Site;
+import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -21,10 +23,6 @@ public class DepartmentService {
 
 	public void postDepartmentToAPI(Department department) throws IOException {
 		sendToAPI("http://localhost:8080/api/departments", "POST", department);
-	}
-
-	public void updateDepartmentInAPI(Department department) throws IOException {
-		sendToAPI("http://localhost:8080/api/departments/" + department.getId(), "PUT", department);
 	}
 
 	public void deleteDepartmentFromAPI(int departmentId) throws IOException {
@@ -69,7 +67,18 @@ public class DepartmentService {
 		conn.setRequestProperty("API-Key", API_KEY);
 		conn.setDoOutput(true);
 
-		String jsonInputString = new Gson().toJson(department);
+		Gson gson = new GsonBuilder()
+				.registerTypeAdapter(Department.class, new JsonSerializer<Department>() {
+					@Override
+					public JsonElement serialize(Department src, Type typeOfSrc, JsonSerializationContext context) {
+						JsonObject jsonObject = new JsonObject();
+						jsonObject.addProperty("name", src.getName());
+						return jsonObject;
+					}
+				})
+				.create();
+
+		String jsonInputString = gson.toJson(department);
 		try (OutputStream os = conn.getOutputStream()) {
 			byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
 			os.write(input, 0, input.length);

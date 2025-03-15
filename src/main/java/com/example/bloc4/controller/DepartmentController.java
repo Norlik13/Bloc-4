@@ -17,7 +17,7 @@ public class DepartmentController {
 	@FXML
 	private TextField nameField;
 
-	private DepartmentService departmentService = new DepartmentService();
+	private final DepartmentService departmentService = new DepartmentService();
 
 	@FXML
 	private void initialize() {
@@ -40,23 +40,6 @@ public class DepartmentController {
 		} catch (IOException e) {
 			e.printStackTrace();
 			showAlert("Error", "Failed to add department");
-		}
-	}
-
-	@FXML
-	private void handleUpdateDepartment() {
-		Department selectedDepartment = departmentTable.getSelectionModel().getSelectedItem();
-		if (selectedDepartment != null) {
-			selectedDepartment.setName(nameField.getText());
-			try {
-				departmentService.updateDepartmentInAPI(selectedDepartment);
-				departmentTable.refresh();
-			} catch (IOException e) {
-				e.printStackTrace();
-				showAlert("Error", "Failed to update department");
-			}
-		} else {
-			showAlert("No Selection", "No department selected for update");
 		}
 	}
 

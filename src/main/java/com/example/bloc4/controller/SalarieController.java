@@ -9,6 +9,7 @@ import com.example.bloc4.service.SalarieService;
 import com.example.bloc4.service.SiteService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -56,13 +57,23 @@ public class SalarieController {
 	@FXML
 	private ComboBox<Department> departmentFilterComboBox;
 	@FXML
-	private Button ajouterButton;
+	private Button ajouterSalarieButton;
 	@FXML
-	private Button modifierButton;
+	private Button modifierSalarieButton;
 	@FXML
-	private Button supprimerButton;
+	private Button supprimerSalarieButton;
+	@FXML
+	private Button addDepartmentButton;
+	@FXML
+	private Button deleteDepartmentButton;
+	@FXML
+	private Button addSiteButton;
+	@FXML
+	private Button deleteSiteButton;
 
 	private final SalarieService salarieService = new SalarieService();
+	private final DepartmentService departmentService = new DepartmentService();
+	private final SiteService siteService = new SiteService();
 	private FilteredList<Salarie> filteredData;
 	User currentUser = new User(User.Role.INVITED);
 	private final String adminPassword = "admin";
@@ -180,9 +191,13 @@ public class SalarieController {
 
 	private void updateButtonVisibility() {
 		boolean isAdmin = currentUser.getRole() == User.Role.ADMIN;
-		ajouterButton.setVisible(isAdmin);
-		modifierButton.setVisible(isAdmin);
-		supprimerButton.setVisible(isAdmin);
+		ajouterSalarieButton.setVisible(isAdmin);
+		modifierSalarieButton.setVisible(isAdmin);
+		supprimerSalarieButton.setVisible(isAdmin);
+		addDepartmentButton.setVisible(isAdmin);
+		deleteDepartmentButton.setVisible(isAdmin);
+		addSiteButton.setVisible(isAdmin);
+		deleteSiteButton.setVisible(isAdmin);
 	}
 
 	@FXML
@@ -205,7 +220,9 @@ public class SalarieController {
 			if (controller.isSaveClicked()) {
 				Salarie newSalarie = controller.getSalarie();
 				salarieService.postSalarieToAPI(newSalarie);
-				salarieTable.getItems().add(newSalarie);
+				ObservableList<Salarie> salarieList = FXCollections.observableArrayList(salarieTable.getItems());
+				salarieList.add(newSalarie);
+				salarieTable.setItems(salarieList);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -227,7 +244,7 @@ public class SalarieController {
 				Scene scene = new Scene(page);
 				dialogStage.setScene(scene);
 
-				// Set the selected salarie in the dialog
+
 				ModifySalarieController controller = loader.getController();
 				controller.setDialogStage(dialogStage);
 				controller.setSalarie(selectedSalarie);
@@ -259,6 +276,122 @@ public class SalarieController {
 			}
 		} else {
 			showAlert("No Selection", "No salarie selected for deletion");
+		}
+	}
+
+	@FXML
+	private void handleAddDepartment() {
+		TextInputDialog dialog = new TextInputDialog();
+		dialog.setTitle("Add Department");
+		dialog.setHeaderText("Enter Department Name");
+		dialog.setContentText("Name:");
+
+		dialog.showAndWait().ifPresent(name -> {
+			Department newDepartment = new Department();
+			newDepartment.setName(name);
+			try {
+				departmentService.postDepartmentToAPI(newDepartment);
+				departmentFilterComboBox.getItems().add(newDepartment);
+			} catch (IOException e) {
+				e.printStackTrace();
+				showAlert("Error", "Failed to add department");
+			}
+		});
+	}
+
+	@FXML
+	private void handleDeleteDepartment() {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/bloc4/selection-dialog.fxml"));
+			Parent page = loader.load();
+			Stage dialogStage = new Stage();
+			dialogStage.setTitle("Select Department to Delete");
+			dialogStage.initModality(Modality.WINDOW_MODAL);
+			dialogStage.initOwner(salarieTable.getScene().getWindow());
+			Scene scene = new Scene(page);
+			dialogStage.setScene(scene);
+
+			SelectionDialogController<Department> controller = loader.getController();
+			controller.setDialogStage(dialogStage);
+			controller.setItems(departmentFilterComboBox.getItems());
+
+			dialogStage.showAndWait();
+
+			if (controller.isDeleteClicked()) {
+				Department selectedDepartment = controller.getSelectedItem();
+				if (selectedDepartment != null) {
+					// Check if any Salarie refers to this Department
+					boolean hasSalaries = filteredData.stream()
+							.anyMatch(salarie -> salarie.getDepartment().equals(selectedDepartment));
+					if (hasSalaries) {
+						showAlert("Error", "Cannot delete department. There are salaries referring to it.");
+					} else {
+						departmentService.deleteDepartmentFromAPI(selectedDepartment.getId());
+						departmentFilterComboBox.getItems().remove(selectedDepartment);
+					}
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			showAlert("Error", "Failed to open selection dialog");
+		}
+	}
+
+	@FXML
+	private void handleAddSite() {
+		TextInputDialog dialog = new TextInputDialog();
+		dialog.setTitle("Add Site");
+		dialog.setHeaderText("Enter Site Name");
+		dialog.setContentText("Name:");
+
+		dialog.showAndWait().ifPresent(name -> {
+			Site newSite = new Site();
+			newSite.setName(name);
+			try {
+				siteService.postSiteToAPI(newSite);
+				siteFilterComboBox.getItems().add(newSite);
+			} catch (IOException e) {
+				e.printStackTrace();
+				showAlert("Error", "Failed to add site");
+			}
+		});
+	}
+
+	@FXML
+	private void handleDeleteSite() {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/bloc4/selection-dialog.fxml"));
+			Parent page = loader.load();
+			Stage dialogStage = new Stage();
+			dialogStage.setTitle("Select Site to Delete");
+			dialogStage.initModality(Modality.WINDOW_MODAL);
+			dialogStage.initOwner(salarieTable.getScene().getWindow());
+			Scene scene = new Scene(page);
+			dialogStage.setScene(scene);
+
+			SelectionDialogController<Site> controller = loader.getController();
+			controller.setDialogStage(dialogStage);
+			controller.setItems(siteFilterComboBox.getItems());
+
+			dialogStage.showAndWait();
+
+			if (controller.isDeleteClicked()) {
+				Site selectedSite = controller.getSelectedItem();
+				if (selectedSite != null) {
+					// Check if any Salarie refers to this Site
+					boolean hasSalaries = filteredData.stream()
+							.anyMatch(salarie -> salarie.getSite().equals(selectedSite));
+					if (hasSalaries) {
+						showAlert("Error", "Cannot delete site. There are salaries referring to it.");
+					} else {
+						siteService.deleteSiteFromAPI(selectedSite.getId());
+						siteFilterComboBox.getItems().remove(selectedSite);
+					}
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			showAlert("Error", "Failed to open selection dialog");
 		}
 	}
 
