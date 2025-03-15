@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.bloc4.controller.SalarieDetailsController" spacing="10" style="-fx-padding: 10;">
+    <Label fx:id="nomLabel" text="Nom:"/>
+    <Label fx:id="prenomLabel" text="Prenom:"/>
+    <Label fx:id="telephoneFixeLabel" text="Telephone Fixe:"/>
+    <Label fx:id="telephonePortableLabel" text="Telephone Portable:"/>
+    <Label fx:id="emailLabel" text="Email:"/>
+    <Label fx:id="departmentLabel" text="Department:"/>
+    <Label fx:id="siteLabel" text="Site:"/>
+</VBox>

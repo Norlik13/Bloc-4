@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.bloc4.controller.ModificationDialogController" spacing="15" style="-fx-padding: 10;">
+    <TextField fx:id="nameField" promptText="Enter new name"/>
+    <Button text="Sauvegarder" onAction="#handleSave"/>
+    <Button text="Cancel" onAction="#handleCancel"/>
+</VBox>

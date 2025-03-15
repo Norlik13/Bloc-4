@@ -8,7 +8,7 @@
 <VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.bloc4.controller.SelectionDialogController" spacing="15" style="-fx-padding: 10;">
     <ComboBox fx:id="selectionComboBox" promptText="Selectionnez un élément"/>
     <HBox spacing="10">
-        <Button text="Supprimer" onAction="#handleDelete"/>
+        <Button text="Confirmer" onAction="#handleDelete"/>
         <Button text="Annuler" onAction="#handleCancel"/>
     </HBox>
 </VBox>

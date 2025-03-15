@@ -25,6 +25,10 @@ public class DepartmentService {
 		sendToAPI("http://localhost:8080/api/departments", "POST", department);
 	}
 
+	public void putDepartmentToAPI(Department department) throws IOException {
+		sendToAPI("http://localhost:8080/api/departments/" + department.getId(), "PUT", department);
+	}
+
 	public void deleteDepartmentFromAPI(int departmentId) throws IOException {
 		URL url = new URL("http://localhost:8080/api/departments/" + departmentId);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();

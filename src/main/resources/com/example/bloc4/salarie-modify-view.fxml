@@ -23,5 +23,5 @@
     <ComboBox fx:id="serviceComboBox" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
     <Label text="Site:" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
     <ComboBox fx:id="siteComboBox" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
-    <Button text="Save" onAction="#handleSave" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+    <Button text="Sauvegarder" onAction="#handleSave" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
 </GridPane>

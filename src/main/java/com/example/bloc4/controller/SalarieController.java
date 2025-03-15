@@ -70,6 +70,10 @@ public class SalarieController {
 	private Button addSiteButton;
 	@FXML
 	private Button deleteSiteButton;
+	@FXML
+	private Button modifierDepartmentButton;
+	@FXML
+	private Button modifierSiteButton;
 
 	private final SalarieService salarieService = new SalarieService();
 	private final DepartmentService departmentService = new DepartmentService();
@@ -106,6 +110,17 @@ public class SalarieController {
 			e.printStackTrace();
 			showAlert("Error", "Failed to fetch data from API");
 		}
+
+		salarieTable.setRowFactory(tv -> {
+			TableRow<Salarie> row = new TableRow<>();
+			row.setOnMouseClicked(event -> {
+				if (event.getClickCount() == 2 && (!row.isEmpty())) {
+					Salarie rowData = row.getItem();
+					showSalarieDetailsDialog(rowData);
+				}
+			});
+			return row;
+		});
 	}
 
 	@FXML
@@ -195,8 +210,10 @@ public class SalarieController {
 		modifierSalarieButton.setVisible(isAdmin);
 		supprimerSalarieButton.setVisible(isAdmin);
 		addDepartmentButton.setVisible(isAdmin);
+		modifierDepartmentButton.setVisible(isAdmin);
 		deleteDepartmentButton.setVisible(isAdmin);
 		addSiteButton.setVisible(isAdmin);
+		modifierSiteButton.setVisible(isAdmin);
 		deleteSiteButton.setVisible(isAdmin);
 	}
 
@@ -338,6 +355,36 @@ public class SalarieController {
 	}
 
 	@FXML
+	private void handleModifyDepartment() {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/bloc4/selection-dialog.fxml"));
+			Parent page = loader.load();
+			Stage dialogStage = new Stage();
+			dialogStage.setTitle("Select Department to Modify");
+			dialogStage.initModality(Modality.WINDOW_MODAL);
+			dialogStage.initOwner(salarieTable.getScene().getWindow());
+			Scene scene = new Scene(page);
+			dialogStage.setScene(scene);
+
+			SelectionDialogController<Department> controller = loader.getController();
+			controller.setDialogStage(dialogStage);
+			controller.setItems(departmentFilterComboBox.getItems());
+
+			dialogStage.showAndWait();
+
+			if (controller.isDeleteClicked()) {
+				Department selectedDepartment = controller.getSelectedItem();
+				if (selectedDepartment != null) {
+					showModificationDialog(selectedDepartment);
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			showAlert("Error", "Failed to open selection dialog");
+		}
+	}
+
+	@FXML
 	private void handleAddSite() {
 		TextInputDialog dialog = new TextInputDialog();
 		dialog.setTitle("Add Site");
@@ -395,11 +442,116 @@ public class SalarieController {
 		}
 	}
 
+	@FXML
+	private void handleModifySite() {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/bloc4/selection-dialog.fxml"));
+			Parent page = loader.load();
+			Stage dialogStage = new Stage();
+			dialogStage.setTitle("Select Site to Modify");
+			dialogStage.initModality(Modality.WINDOW_MODAL);
+			dialogStage.initOwner(salarieTable.getScene().getWindow());
+			Scene scene = new Scene(page);
+			dialogStage.setScene(scene);
+
+			SelectionDialogController<Site> controller = loader.getController();
+			controller.setDialogStage(dialogStage);
+			controller.setItems(siteFilterComboBox.getItems());
+
+			dialogStage.showAndWait();
+
+			if (controller.isDeleteClicked()) {
+				Site selectedSite = controller.getSelectedItem();
+				if (selectedSite != null) {
+					showModificationDialog(selectedSite);
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			showAlert("Error", "Failed to open selection dialog");
+		}
+	}
+
+	private void showModificationDialog(Object item) {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/bloc4/modification-dialog.fxml"));
+			Parent page = loader.load();
+			Stage dialogStage = new Stage();
+			dialogStage.setTitle("Modify Name");
+			dialogStage.initModality(Modality.WINDOW_MODAL);
+			dialogStage.initOwner(salarieTable.getScene().getWindow());
+			Scene scene = new Scene(page);
+			dialogStage.setScene(scene);
+
+			ModificationDialogController controller = loader.getController();
+			controller.setDialogStage(dialogStage);
+			if (item instanceof Department) {
+				controller.setName(((Department) item).getName());
+			} else if (item instanceof Site) {
+				controller.setName(((Site) item).getName());
+			}
+
+			dialogStage.showAndWait();
+
+			if (controller.isSaveClicked()) {
+				String newName = controller.getNewName();
+				if (item instanceof Department) {
+					((Department) item).setName(newName);
+					departmentService.putDepartmentToAPI((Department) item);
+					departmentFilterComboBox.getItems().setAll(departmentService.fetchDepartmentsFromAPI());
+					refreshSalarieTable();
+				} else if (item instanceof Site) {
+					((Site) item).setName(newName);
+					siteService.putSiteToAPI((Site) item);
+					siteFilterComboBox.getItems().setAll(siteService.fetchSitesFromAPI());
+					refreshSalarieTable();
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			showAlert("Error", "Failed to open modification dialog");
+		}
+	}
+
+	private void refreshSalarieTable() {
+		try {
+			List<Salarie> salaries = salarieService.fetchSalariesFromAPI();
+			filteredData = new FilteredList<>(FXCollections.observableArrayList(salaries), p -> true);
+			salarieTable.setItems(filteredData);
+			salarieTable.refresh();
+		} catch (IOException e) {
+			e.printStackTrace();
+			showAlert("Error", "Failed to refresh salarie table");
+		}
+	}
+
 	private void showAlert(String title, String message) {
 		Alert alert = new Alert(Alert.AlertType.ERROR);
 		alert.setTitle(title);
 		alert.setHeaderText(null);
 		alert.setContentText(message);
 		alert.showAndWait();
+	}
+
+	private void showSalarieDetailsDialog(Salarie salarie) {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/bloc4/salarie-details-view.fxml"));
+			Parent page = loader.load();
+			Stage dialogStage = new Stage();
+			dialogStage.setTitle("Salarie Details");
+			dialogStage.initModality(Modality.WINDOW_MODAL);
+			dialogStage.initOwner(salarieTable.getScene().getWindow());
+			Scene scene = new Scene(page);
+			dialogStage.setScene(scene);
+
+			SalarieDetailsController controller = loader.getController();
+			controller.setDialogStage(dialogStage);
+			controller.setSalarie(salarie);
+
+			dialogStage.showAndWait();
+		} catch (IOException e) {
+			e.printStackTrace();
+			showAlert("Error", "Failed to open salarie details dialog");
+		}
 	}
 }

@@ -29,6 +29,10 @@ public class SiteService {
 		sendToAPI("http://localhost:8080/api/sites", "POST", site);
 	}
 
+	public void putSiteToAPI(Site site) throws IOException {
+		sendToAPI("http://localhost:8080/api/sites/" + site.getId(), "PUT", site);
+	}
+
 	public void deleteSiteFromAPI(int siteId) throws IOException {
 		URL url = new URL("http://localhost:8080/api/sites/" + siteId);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();

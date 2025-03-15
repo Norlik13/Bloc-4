@@ -29,10 +29,12 @@
             </VBox>
             <VBox spacing="10">
                 <Button fx:id="addDepartmentButton" text="Ajouter un departement" onAction="#handleAddDepartment" visible="false"/>
+                <Button fx:id="modifierDepartmentButton" text="Modifier un departement" onAction="#handleModifyDepartment" visible="false"/>
                 <Button fx:id="deleteDepartmentButton" text="Supprimer un departement" onAction="#handleDeleteDepartment" visible="false"/>
             </VBox>
             <VBox spacing="10">
                 <Button fx:id="addSiteButton" text="Ajouter un site" onAction="#handleAddSite" visible="false"/>
+                <Button fx:id="modifierSiteButton" text="Modifier un site" onAction="#handleModifySite" visible="false"/>
                 <Button fx:id="deleteSiteButton" text="Supprimer un site" onAction="#handleDeleteSite" visible="false"/>
             </VBox>
         </HBox>
