@@ -42,6 +42,7 @@
     <VBox style="-fx-padding: 10" spacing="10">
         <TextField fx:id="nameFilterField" promptText="Entrez un nom"/>
         <TextField fx:id="prenomFilterField" promptText="Entrez un prénom"/>
+        <TextField fx:id="phoneFilterTextField" promptText="Filter by Phone Number"/>
         <ComboBox fx:id="siteFilterComboBox" promptText="Selectionnez un site"/>
         <ComboBox fx:id="departmentFilterComboBox" promptText="Selectionnez un departement"/>
         <HBox spacing="10">

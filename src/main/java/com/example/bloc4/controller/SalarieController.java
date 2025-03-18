@@ -74,6 +74,8 @@ public class SalarieController {
 	private Button modifierDepartmentButton;
 	@FXML
 	private Button modifierSiteButton;
+	@FXML
+	private TextField phoneFilterTextField;
 
 	private final SalarieService salarieService = new SalarieService();
 	private final DepartmentService departmentService = new DepartmentService();
@@ -128,6 +130,7 @@ public class SalarieController {
 		String nameFilter = nameFilterField.getText().toLowerCase();
 		String prenomFilter = prenomFilterField.getText().toLowerCase();
 		Site selectedSite = siteFilterComboBox.getValue();
+		String phoneFilter = phoneFilterTextField.getText().toLowerCase();
 		Department selectedDepartment = departmentFilterComboBox.getValue();
 
 		filteredData.setPredicate(salarie -> {
@@ -135,11 +138,15 @@ public class SalarieController {
 			boolean matchesPrenom = prenomFilter.isEmpty() || salarie.getPrenom().toLowerCase().contains(prenomFilter);
 			boolean matchesSite = selectedSite == null || salarie.getSite().equals(selectedSite);
 			boolean matchesDepartment = selectedDepartment == null || salarie.getDepartment().equals(selectedDepartment);
-			return matchesName && matchesPrenom && matchesSite && matchesDepartment;
+			boolean matchesPhone = phoneFilter.isEmpty() ||
+					salarie.getTelephoneFixe().toLowerCase().contains(phoneFilter) ||
+					salarie.getTelephonePortable().toLowerCase().contains(phoneFilter);
+			return matchesName && matchesPrenom && matchesSite && matchesDepartment && matchesPhone;
 		});
 
 		nameFilterField.clear();
 		prenomFilterField.clear();
+		phoneFilterTextField.clear();
 		siteFilterComboBox.setValue(null);
 		siteFilterComboBox.setPromptText("Selectionnez un site");
 		departmentFilterComboBox.setValue(null);
@@ -150,6 +157,7 @@ public class SalarieController {
 	private void handleResetFilter() {
 		nameFilterField.clear();
 		prenomFilterField.clear();
+		phoneFilterTextField.clear();
 		siteFilterComboBox.setValue(null);
 		siteFilterComboBox.setPromptText("Selectionnez un site");
 		departmentFilterComboBox.setValue(null);
