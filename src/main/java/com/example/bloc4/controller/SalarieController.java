@@ -342,11 +342,10 @@ public class SalarieController {
 			if (controller.isDeleteClicked()) {
 				Department selectedDepartment = controller.getSelectedItem();
 				if (selectedDepartment != null) {
-					// Check if any Salarie refers to this Department
 					boolean hasSalaries = filteredData.stream()
 							.anyMatch(salarie -> salarie.getDepartment().equals(selectedDepartment));
 					if (hasSalaries) {
-						showAlert("Error", "Cannot delete department. There are salaries referring to it.");
+						showAlert("Error", "Vous ne pouve pas supprimer un département tant que des salariés y sont référencés.");
 					} else {
 						departmentService.deleteDepartmentFromAPI(selectedDepartment.getId());
 						departmentFilterComboBox.getItems().setAll(departmentService.fetchDepartmentsFromAPI());
@@ -430,11 +429,10 @@ public class SalarieController {
 			if (controller.isDeleteClicked()) {
 				Site selectedSite = controller.getSelectedItem();
 				if (selectedSite != null) {
-					// Check if any Salarie refers to this Site
 					boolean hasSalaries = filteredData.stream()
 							.anyMatch(salarie -> salarie.getSite().equals(selectedSite));
 					if (hasSalaries) {
-						showAlert("Error", "Cannot delete site. There are salaries referring to it.");
+						showAlert("Error", "Vous ne pouve pas supprimer un site tant que des salariés y sont référencés.");
 					} else {
 						siteService.deleteSiteFromAPI(selectedSite.getId());
 						siteFilterComboBox.getItems().remove(selectedSite);
