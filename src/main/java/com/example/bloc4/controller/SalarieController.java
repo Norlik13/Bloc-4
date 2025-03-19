@@ -9,7 +9,6 @@ import com.example.bloc4.service.SalarieService;
 import com.example.bloc4.service.SiteService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -245,9 +244,7 @@ public class SalarieController {
 			if (controller.isSaveClicked()) {
 				Salarie newSalarie = controller.getSalarie();
 				salarieService.postSalarieToAPI(newSalarie);
-				ObservableList<Salarie> salarieList = FXCollections.observableArrayList(salarieTable.getItems());
-				salarieList.add(newSalarie);
-				salarieTable.setItems(salarieList);
+				refreshSalarieTable();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -277,7 +274,7 @@ public class SalarieController {
 				dialogStage.showAndWait();
 
 				if (controller.isSaveClicked()) {
-					salarieTable.refresh();
+					refreshSalarieTable();
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -294,7 +291,7 @@ public class SalarieController {
 		if (selectedSalarie != null) {
 			try {
 				salarieService.deleteSalarieFromAPI(selectedSalarie.getId());
-				salarieTable.getItems().remove(selectedSalarie);
+				refreshSalarieTable();
 			} catch (IOException e) {
 				e.printStackTrace();
 				showAlert("Error", "Failed to delete salarie");
@@ -316,7 +313,7 @@ public class SalarieController {
 			newDepartment.setName(name);
 			try {
 				departmentService.postDepartmentToAPI(newDepartment);
-				departmentFilterComboBox.getItems().add(newDepartment);
+				departmentFilterComboBox.getItems().setAll(departmentService.fetchDepartmentsFromAPI());
 			} catch (IOException e) {
 				e.printStackTrace();
 				showAlert("Error", "Failed to add department");
@@ -352,7 +349,7 @@ public class SalarieController {
 						showAlert("Error", "Cannot delete department. There are salaries referring to it.");
 					} else {
 						departmentService.deleteDepartmentFromAPI(selectedDepartment.getId());
-						departmentFilterComboBox.getItems().remove(selectedDepartment);
+						departmentFilterComboBox.getItems().setAll(departmentService.fetchDepartmentsFromAPI());
 					}
 				}
 			}
@@ -404,7 +401,7 @@ public class SalarieController {
 			newSite.setName(name);
 			try {
 				siteService.postSiteToAPI(newSite);
-				siteFilterComboBox.getItems().add(newSite);
+				siteFilterComboBox.getItems().setAll(siteService.fetchSitesFromAPI());
 			} catch (IOException e) {
 				e.printStackTrace();
 				showAlert("Error", "Failed to add site");
@@ -526,7 +523,6 @@ public class SalarieController {
 			List<Salarie> salaries = salarieService.fetchSalariesFromAPI();
 			filteredData = new FilteredList<>(FXCollections.observableArrayList(salaries), p -> true);
 			salarieTable.setItems(filteredData);
-			salarieTable.refresh();
 		} catch (IOException e) {
 			e.printStackTrace();
 			showAlert("Error", "Failed to refresh salarie table");

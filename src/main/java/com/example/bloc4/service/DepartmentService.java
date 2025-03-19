@@ -36,7 +36,7 @@ public class DepartmentService {
 		conn.setRequestProperty("API-Key", API_KEY);
 
 		int responseCode = conn.getResponseCode();
-		if (responseCode != HttpURLConnection.HTTP_NO_CONTENT) {
+		if (responseCode != HttpURLConnection.HTTP_OK) {
 			throw new IOException("Failed to delete department: HTTP response code " + responseCode);
 		}
 	}

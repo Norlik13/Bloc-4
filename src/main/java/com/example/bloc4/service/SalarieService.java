@@ -27,7 +27,7 @@ public class SalarieService {
 		sendToAPI("http://localhost:8080/api/salaries/" + salarie.getId(), "PUT", salarie);
 	}
 
-	public void deleteSalarieFromAPI(int salarieId) throws IOException {
+	public boolean deleteSalarieFromAPI(int salarieId) throws IOException {
 		String urlString = "http://localhost:8080/api/salaries/" + salarieId;
 		URL url = new URL(urlString);
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -37,6 +37,9 @@ public class SalarieService {
 		int responseCode = connection.getResponseCode();
 		if (responseCode != HttpURLConnection.HTTP_OK) {
 			throw new IOException("Failed to delete salarie: HTTP response code " + responseCode);
+		}
+		else {
+			return true;
 		}
 	}
 
